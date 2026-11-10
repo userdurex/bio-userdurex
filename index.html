@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>userdurex</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #2f80ed;
+            --blue-light: #eaf2ff;
+            --blue-deep: #1c5fc4;
+            --ink: #10203a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at 20% 0%, #eaf3ff 0%, #f7fbff 45%, #ffffff 100%);
+            color: var(--ink);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Центрируем всё по вертикали */
+            padding: 24px;
+            overflow-x: hidden;
+            gap: 16px; /* Уменьшил отступ между карточкой и полотном */
+        }
+
+        /* Плавающие голубые «пятна» на фоне */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.5;
+            z-index: 0;
+            animation: float 14s ease-in-out infinite;
+        }
+        .blob-1 {
+            width: 320px; height: 320px;
+            background: #bcd8ff;
+            top: -80px; left: -80px;
+        }
+        .blob-2 {
+            width: 260px; height: 260px;
+            background: #d6e8ff;
+            bottom: -60px; right: -60px;
+            animation-delay: -7s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, 30px) scale(1.08); }
+        }
+
+        /* ---- Снежинки на фоне ---- */
+        .snow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10%;
+            color: #a9c9ff;
+            opacity: 0.7;
+            user-select: none;
+            animation-name: fall;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% {
+                transform: translateY(110vh) translateX(40px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ---- Верхняя карточка ---- */
+        .card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(47, 128, 237, 0.15);
+            border-radius: 28px;
+            padding: 40px 44px;
+            max-width: 560px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(47, 128, 237, 0.12);
+            text-align: center;
+        }
+
+        /* ---- Нижнее белое полотно ---- */
+        .banner {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(47, 128, 237, 0.15);
+            border-radius: 24px;
+            padding: 24px 32px; /* Сделал чуть компактнее */
+            max-width: 560px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(47, 128, 237, 0.12);
+            text-align: center;
+        }
+
+        .banner p {
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+            color: var(--blue-deep);
+            text-transform: uppercase;
+        }
+
+        /* ---- Анимация появления ---- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .d1 { animation-delay: 0.1s; }
+        .d2 { animation-delay: 0.25s; }
+        .d3 { animation-delay: 0.4s; }
+        .d4 { animation-delay: 0.55s; }
+        .d5 { animation-delay: 0.7s; }
+
+        @keyframes rise {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Заголовок */
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--ink);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .title span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(24px) rotate(4deg);
+            animation: letterIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes letterIn {
+            to { opacity: 1; transform: translateY(0) rotate(0); }
+        }
+
+        /* Картинка */
+        .photo {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 28px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 3px solid #ffffff;
+            box-shadow: 0 12px 32px rgba(47, 128, 237, 0.25);
+            background: var(--blue-light);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .photo:hover {
+            transform: scale(1.05) rotate(-1deg);
+            box-shadow: 0 16px 40px rgba(47, 128, 237, 0.35);
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Кнопки */
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 0; /* Убрал лишний отступ снизу */
+        }
+
+        .btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 28px;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            color: var(--blue-deep);
+            background: #ffffff;
+            border: 1.5px solid var(--blue);
+            overflow: hidden;
+            transition: color 0.35s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+            isolation: isolate;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: #ffffff;
+            transform: scale(1.06);
+            box-shadow: 0 14px 32px rgba(47, 128, 237, 0.4);
+        }
+
+        .btn:hover::before {
+            transform: scaleX(1);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn .icon {
+            display: inline-flex;
+            width: 22px;
+            height: 22px;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .btn .icon::after {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            opacity: 0;
+            animation: pulse 2.4s ease-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(0.6); }
+            80%, 100% { opacity: 0; transform: scale(1.4); }
+        }
+
+        .btn .icon svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновые пятна -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Снежинки -->
+    <div class="snow" id="snow"></div>
+
+    <!-- Верхняя карточка -->
+    <div class="card">
+        <h1 class="title" id="title" aria-label="userdurex"></h1>
+
+        <div class="photo reveal d1">
+            <img src="https://i.pinimg.com/736x/75/26/a5/7526a5417dfd4349036508a72dfb1ec5.jpg" alt="userdurex">
+        </div>
+
+        <div class="buttons">
+            <a class="btn reveal d3" href="https://t.me/bezeyesmusic" target="_blank" rel="noopener">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9.04 15.47l-.38 5.35c.54 0 .78-.23 1.06-.5l2.55-2.44 5.28 3.86c.97.54 1.66.26 1.92-.9L22.9 4.6c.3-1.42-.52-1.98-1.46-1.63L2.6 9.9c-1.38.54-1.36 1.3-.24 1.65l4.77 1.49L18.2 6.1c.52-.34 1-.15.6.19l-9.76 8.8z"/>
+                    </svg>
+                </span>
+                ТЕЛЕГРАМ
+            </a>
+
+            <a class="btn reveal d4" href="https://soundcloud.com/userdurex" target="_blank" rel="noopener">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 14.5a1 1 0 0 1 2 0V17a1 1 0 0 1-2 0v-2.5zm3.5-3a1 1 0 0 1 2 0V17a1 1 0 0 1-2 0v-5.5zm3.5-2.5a1 1 0 0 1 2 0V17a1 1 0 0 1-2 0V9zm3.5-1a1 1 0 0 1 2 0v9a1 1 0 0 1-2 0V8zm3.5-2a1 1 0 0 1 2 0v11a1 1 0 0 1-2 0V6zm3.5 2.5c2.5 0 4.5 1.7 4.5 4s-2 4-4.5 4h-1V9h1z" transform="scale(0.85) translate(1,1)"/>
+                    </svg>
+                </span>
+                СОУНДКЛАУД
+            </a>
+        </div>
+    </div>
+
+    <!-- Нижнее белое полотно с надписью -->
+    <div class="banner reveal d5">
+        <p>ПАПИСЫТЕСЬ НА МАИ ТГК И САУНДКЛАУДЫ Я ЛЮБЛЮ ФАРМЕТЬ ПАПИЩЕКАВ СУКИИ ДАВАЙ Я ХОЧУ ЭТО НАКИДАЙТЕ МНЕ БЛЯЯ</p>
+    </div>
+
+    <script>
+        // Побуквенное появление заголовка
+        const titleText = "userdurex";
+        const titleEl = document.getElementById("title");
+        titleText.split("").forEach((ch, i) => {
+            const span = document.createElement("span");
+            span.textContent = ch;
+            span.style.animationDelay = `${0.15 + i * 0.06}s`;
+            titleEl.appendChild(span);
+        });
+
+        // Генерация снежинок
+        const snowContainer = document.getElementById("snow");
+        const symbols = ["❄", "❅", "❆", "✻", "✼"];
+        const count = 28;
+
+        for (let i = 0; i < count; i++) {
+            const flake = document.createElement("span");
+            flake.className = "snowflake";
+            flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            flake.style.left = Math.random() * 100 + "%";
+            flake.style.fontSize = (10 + Math.random() * 16) + "px";
+            flake.style.animationDuration = (8 + Math.random() * 10) + "s";
+            flake.style.animationDelay = (-Math.random() * 18) + "s";
+            flake.style.opacity = 0.3 + Math.random() * 0.5;
+            snowContainer.appendChild(flake);
+        }
+    </script>
+
+</body>
+</html>
